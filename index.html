@@ -48,6 +48,7 @@ header{
     padding:12px 15px;
     background:#fff;
     border-bottom:1px solid #eee;
+    align-items:center;
 }
 .navbar::-webkit-scrollbar{display:none;}
 .navbar button{
@@ -56,6 +57,11 @@ header{
     font-size:14px;
     white-space:nowrap;
     cursor:pointer;
+}
+.navbar select{
+    padding:6px 10px;
+    border-radius:10px;
+    border:1px solid #ddd;
 }
 .container{
     padding:20px 15px 100px;
@@ -184,9 +190,25 @@ NOVIDADES EM PRATA 925 ✨ | FRETE DISPONÍVEL
 <div class="navbar">
 <button onclick="filtrarCategoria('todos')">Todos</button>
 <button onclick="filtrarCategoria('argola')">Argolas</button>
+<button onclick="filtrarCategoria('berloques')">Berloques</button>
+
+<select onchange="ordenarProdutos(this.value)">
+    <option value="">Ordenar por</option>
+    <option value="menor">Menor preço</option>
+    <option value="maior">Maior preço</option>
+    <option value="az">Nome A–Z</option>
+    <option value="za">Nome Z–A</option>
+</select>
 </div>
 
 <div class="container">
+
+<div class="card" data-categoria="argola">
+<img src="a.png">
+<h3>Argola Redonda P</h3>
+<p class="price">R$ 14,90</p>
+<button class="add-btn" onclick="addCarrinho(this)">Adicionar</button>
+</div>
 
 <div class="card" data-categoria="argola">
 <img src="a.png">
@@ -206,6 +228,20 @@ NOVIDADES EM PRATA 925 ✨ | FRETE DISPONÍVEL
 <img src="a.png">
 <h3>Argola Redonda G</h3>
 <p class="price">R$ 25,90</p>
+<button class="add-btn" onclick="addCarrinho(this)">Adicionar</button>
+</div>
+
+<div class="card" data-categoria="argola">
+<img src="a.png">
+<h3>Kit Argolas Redonda P M G</h3>
+<p class="price">R$ 44,90</p>
+<button class="add-btn" onclick="addCarrinho(this)">Adicionar</button>
+</div>
+
+<div class="card" data-categoria="berloques">
+<img src="bsao.webp">
+<h3>Berloque Time São Paulo</h3>
+<p class="price">R$ 59,90</p>
 <button class="add-btn" onclick="addCarrinho(this)">Adicionar</button>
 </div>
 
@@ -305,6 +341,27 @@ function pesquisarProduto(){
         let nome = card.querySelector("h3").innerText.toLowerCase();
         card.style.display = nome.includes(termo) ? "block" : "none";
     });
+}
+
+function ordenarProdutos(tipo){
+    let container = document.querySelector(".container");
+    let cards = Array.from(container.querySelectorAll(".card"));
+
+    cards.sort((a,b)=>{
+        let nomeA = a.querySelector("h3").innerText.toLowerCase();
+        let nomeB = b.querySelector("h3").innerText.toLowerCase();
+        let precoA = parseFloat(a.querySelector(".price").innerText.replace("R$","").replace(",",".").trim());
+        let precoB = parseFloat(b.querySelector(".price").innerText.replace("R$","").replace(",",".").trim());
+
+        if(tipo === "menor") return precoA - precoB;
+        if(tipo === "maior") return precoB - precoA;
+        if(tipo === "az") return nomeA.localeCompare(nomeB);
+        if(tipo === "za") return nomeB.localeCompare(nomeA);
+
+        return 0;
+    });
+
+    cards.forEach(card => container.appendChild(card));
 }
 </script>
 
